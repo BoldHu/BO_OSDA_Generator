@@ -1,0 +1,4 @@
+OSDA,Zeolite,Method,Binding Energy
+"Adsorbate(symbols='C2NC2', pbc=False, calculator=LennardJones(...))",ACO,bfgs,-260.49382227521
+"Adsorbate(symbols='C2NC2H11', pbc=False, calculator=LennardJones(...))",ACO,bfgs,-332.2049847040942
+"Adsorbate(symbols='C2NC2H11', pbc=False, calculator=LennardJones(...))",ACO,bfgs,-417.2026109611205

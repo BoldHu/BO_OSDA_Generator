@@ -122,3 +122,24 @@ def smiles_to_sequence(smis_list, char_to_index):
         smis_seq = torch.tensor(smis_seq, dtype=torch.float32)
         smis_list_sequence.append(smis_seq)
     return smis_list_sequence
+
+# 编码转换成字符串
+def sequence_to_smiles(seq_list, index_to_char):
+    # check if the sequence is a tensor
+    if isinstance(seq_list, torch.Tensor):
+        seq_list = seq_list.tolist()
+    elif isinstance(seq_list, np.ndarray):
+        seq_list = seq_list.tolist()
+    smis_list = []
+    for seq in seq_list:
+        smis = ''
+        for i in seq:
+            element = index_to_char[int(i)]
+            if element == '$':
+                break
+            elif element == '^':
+                continue
+            else:
+                smis += element
+        smis_list.append(smis)
+    return smis_list
