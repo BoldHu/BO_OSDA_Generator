@@ -14,7 +14,7 @@ from rdkit import Chem
 from function_list import *
 from download_zeolite_cif import download_zeolite_files
 
-def calculate_binding_energy(osda_smiles, zeolite_name, zeolite_dir = './zeolite_files/', atom_dir = './atom_path/', smiles_dir = './smiles_pdb/'):
+def calculate_binding_energy(osda_smiles, zeolite_name, zeolite_dir = './simulation/zeolite_files/', atom_dir = './simulation/atom_path/', smiles_dir = './simulation/smiles_pdb/'):
     """
     Calculate the binding energy of the specified OSDA with the specified zeolite.
 
@@ -81,7 +81,7 @@ def calculate_binding_energy(osda_smiles, zeolite_name, zeolite_dir = './zeolite
     
     return odsa_smiles, zeolite_name, 'bfgs', c
 
-def calculate_binding_energy_l(osda_smiles, zeolite_name, zeolite_dir = './zeolite_files/', atom_dir = './atom_path/', smiles_dir = './smiles_pdb/'):
+def calculate_binding_energy_l(osda_smiles, zeolite_name, zeolite_dir = './simulation/zeolite_files/', atom_dir = './simulation/atom_path/', smiles_dir = './simulation/smiles_pdb/'):
     """
     Calculate the binding energy of the specified OSDA with the specified zeolite.
 
@@ -148,7 +148,7 @@ def calculate_binding_energy_l(osda_smiles, zeolite_name, zeolite_dir = './zeoli
     
     return odsa_smiles, zeolite_name, 'bfgs', c
 
-def calculate_binding_energy_H(osda_smiles, zeolite_name, zeolite_dir = './zeolite_files/', atom_dir = './atom_path/', smiles_dir = './smiles_pdb/'):
+def calculate_binding_energy_H(osda_smiles, zeolite_name, zeolite_dir = './simulation/zeolite_files/', atom_dir = './simulation/atom_path/', smiles_dir = './simulation/smiles_pdb/'):
     """
     Calculate the binding energy of the specified OSDA with the specified zeolite with high accuracy using calculate_smiles_structure_with_hydrogen
 
@@ -229,7 +229,7 @@ if __name__ == '__main__':
     print(f"Binding energy of {osda_smiles} with {zeolite_name}: {binding_energy_l}")
     
     # save the binding energy to a CSV file
-    with open('binding_energy.csv', 'w', newline='') as csvfile:
+    with open('./simulation/results/binding_energy.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['OSDA', 'Zeolite', 'Method', 'Binding Energy'])
         if binding_energy != -float('inf'):

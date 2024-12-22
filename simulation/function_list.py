@@ -7,7 +7,7 @@ import numpy as np
 
 def calculate_smiles_structure(smiles):
     # smiles_pdb_path = 'C:\\Users\\Administrator\\PycharmProjects\\pythonProject\\smiles_pdb\\'
-    smiles_pdb_path = './smiles_pdb/'
+    smiles_pdb_path = './simulation/smiles_pdb/'
     mol = Chem.MolFromSmiles(smiles)
     # 检查分子是否为空
     if mol is None:
@@ -28,7 +28,7 @@ def calculate_smiles_structure(smiles):
 
 def calculate_smiles_structure_with_hydrogen(smiles):
     # smiles_pdb_path = 'C:\\Users\\Administrator\\PycharmProjects\\pythonProject\\smiles_pdb\\'
-    smiles_pdb_path = './smiles_pdb/'
+    smiles_pdb_path = './simulation/smiles_pdb/'
     mol = Chem.MolFromSmiles(smiles)
     # 检查分子是否为空
     if mol is None:
@@ -82,10 +82,10 @@ if __name__ == '__main__':
     smiles = 'N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C2'
     # mol = calculate_smiles_structure(smiles)
     # # 读取PDB文件中的坐标数据
-    # pdb_file = './smiles_pdb/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C2'
+    # pdb_file = './simulation/smiles_pdb/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C2'
     # position, atom_list = read_pdb_coordinates(pdb_file)
     # # 将坐标数据写入CSV文件
-    # csv_filename = './atom_path/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C2.csv'
+    # csv_filename = './simulation/atom_path/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C2.csv'
     # write_coordinates_to_csv(position, csv_filename)
     # print('原子类型：', atom_list)
     # print('坐标数据已保存到：', csv_filename)
@@ -93,10 +93,10 @@ if __name__ == '__main__':
     
     mol = calculate_smiles_structure_with_hydrogen(smiles)
     # 读取PDB文件中的坐标数据
-    pdb_file = './smiles_pdb/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C2_H.pdb'
+    pdb_file = './simulation/smiles_pdb/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C2_H.pdb'
     position, atom_list = read_pdb_coordinates(pdb_file)
     # 将坐标数据写入CSV文件
-    csv_filename = './atom_path/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C_H.csv'
+    csv_filename = './simulation/atom_path/N[C@]12C[C@H]3C[C@H](C[C@H](C3)C1)C_H.csv'
     write_coordinates_to_csv(position, csv_filename)
     print('原子类型：', atom_list)
     print('坐标数据已保存到：', csv_filename)
