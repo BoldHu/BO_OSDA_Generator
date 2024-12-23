@@ -1,22 +1,16 @@
-import os
-from math import inf
-
 import pandas as pd
 from pandas import DataFrame as df
 from rdkit import Chem
 import numpy as np
 import random
 import torch
-import torch.nn as nn
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from tqdm import tqdm
 from datetime import datetime
-from torch.optim import lr_scheduler
 from torch.utils.tensorboard import SummaryWriter
 from rdkit import Chem
-from rdkit.Chem import AllChem
 
 
 # 加载文件路径
@@ -28,8 +22,8 @@ data_file = r'./data/OSDA_ZEO.xlsx'
 model_file = r'./checkpoints/NO.0-2024-12-18-16-58-50-0.275966-0.15.pth'
 
 # 加载模型文件
-from gpt6lm import Model
-from gpt6lm import config
+from models.clamer import GptCovd
+from configs.config_clamer import config
 
 # 分子筛结构信息特征化
 def featurize_zeolite(row):
@@ -294,7 +288,6 @@ def sample_gpt(epochs, temp):
     writer.close()
     return sample_nll_total, smiles_gen_total
 
-
 if __name__ == '__main__':
     # 读取数据
     data = pd.read_excel(data_file, engine='openpyxl')
@@ -319,7 +312,11 @@ if __name__ == '__main__':
     # print('samples of testset without augmented is: ', len(train_dataset))
     sample_dataloader = DataLoader(sample_dataset, batch_size=config().batch_size, shuffle=False, collate_fn=None, pin_memory=True)
     # 加载模型
-    model = Model().to(config().device)
+    model = GptCovd(d_model=config().d_model, 
+                    charlen=config().charlen,
+                    device=config().device,
+                    head=config().head,
+                    char_to_index=config().char_to_index).to(config().device)
     model.load_state_dict(
         torch.load(model_file,  map_location=torch.device('cuda:0')))
 

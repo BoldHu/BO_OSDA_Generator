@@ -28,4 +28,4 @@ def download_zeolite_files(zeolite_names, data_dir):
 # Example usage
 if __name__ == '__main__':
     zeolite_list = ["GOO", "ACO"]  # Add more zeolite names as needed
-    download_zeolite_files(zeolite_list, "zeolite_files")
+    download_zeolite_files(zeolite_list, "./simulation/zeolite_files")

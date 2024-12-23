@@ -143,3 +143,10 @@ def sequence_to_smiles(seq_list, index_to_char):
                 smis += element
         smis_list.append(smis)
     return smis_list
+
+# set the top k logits to -inf
+def top_k_logits(logits, k):
+    v, ix = torch.topk(logits, k)
+    out = logits.clone()
+    out[out < v[:, [-1]]] = -float('Inf')
+    return out

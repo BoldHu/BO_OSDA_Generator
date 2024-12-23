@@ -53,7 +53,7 @@ def calculate_binding_energy(osda_smiles, zeolite_name, zeolite_dir = './simulat
         print(f"Error processing file {smiles_pdb_path}: {e}")
     
     # get the zeolite object and osda atom object
-    bea_zeolite = Zeolite.make(zeolite_name)
+    bea_zeolite = Zeolite.make(iza_code=zeolite_name, data_dir='./simulation/zeolite_files/')
     zeolite_atom = Atoms(bea_zeolite.symbols, positions=bea_zeolite.positions)
     
     # integrate the adsorbate with the zeolite
@@ -120,7 +120,7 @@ def calculate_binding_energy_l(osda_smiles, zeolite_name, zeolite_dir = './simul
         print(f"Error processing file {smiles_pdb_path}: {e}")
     
     # get the zeolite object and osda atom object
-    bea_zeolite = Zeolite.make(zeolite_name)
+    bea_zeolite = Zeolite.make(iza_code=zeolite_name, data_dir='./simulation/zeolite_files/')
     zeolite_atom = Atoms(bea_zeolite.symbols, positions=bea_zeolite.positions)
     
     # integrate the adsorbate with the zeolite
@@ -187,7 +187,7 @@ def calculate_binding_energy_H(osda_smiles, zeolite_name, zeolite_dir = './simul
         print(f"Error processing file {smiles_pdb_path}: {e}")
     
     # get the zeolite object and osda atom object
-    bea_zeolite = Zeolite.make(zeolite_name)
+    bea_zeolite = Zeolite.make(iza_code=zeolite_name, data_dir='./simulation/zeolite_files/')
     zeolite_atom = Atoms(bea_zeolite.symbols, positions=bea_zeolite.positions)
     
     # integrate the adsorbate with the zeolite
