@@ -2,6 +2,8 @@ import csv
 import numpy as np
 import torch
 import random
+import torch
+import torch.nn.functional as F
 
 def read_vec(filepath, idx=True):  # 定义文件名称，本文件要与当前的.py文件要在同一文件夹下，不然要用绝对路径
     if idx:
@@ -112,7 +114,7 @@ def data_split(split, unique_codes, smiles, zeo_vectors, syn_vectors, codes):
                     train_codes.append(c)
     return train_smiles, train_zeo, train_syn, train_codes, test_smiles, test_zeo, test_syn, test_codes
 
-# 字符串编码
+# convert the SMILES to sequence
 def smiles_to_sequence(smis_list, char_to_index):
     smis_list_sequence = []
     for smis in smis_list:
@@ -123,7 +125,7 @@ def smiles_to_sequence(smis_list, char_to_index):
         smis_list_sequence.append(smis_seq)
     return smis_list_sequence
 
-# 编码转换成字符串
+# convert the sequence to SMILES
 def sequence_to_smiles(seq_list, index_to_char):
     # check if the sequence is a tensor
     if isinstance(seq_list, torch.Tensor):
@@ -150,3 +152,20 @@ def top_k_logits(logits, k):
     out = logits.clone()
     out[out < v[:, [-1]]] = -float('Inf')
     return out
+
+# predict the SMILES
+def predict(zeo, syn, model, char_to_index):
+    # x = [1, 50]
+    model.eval()
+
+    target = [char_to_index['^']] + [char_to_index['?']] * 124
+    target = torch.LongTensor(target).unsqueeze(0)
+    # search for the next character in the sequence
+    for i in range(124):
+        # [1, 50]
+        out = F.softmax(model(zeo, syn, target)[:, i + 2, :])
+        out = out.argmax(dim=1).detach()
+        # add the predicted character to the sequence
+        target[:, i + 1] = out
+
+    return target
