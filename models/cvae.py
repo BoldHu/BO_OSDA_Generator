@@ -260,7 +260,7 @@ class ConditionalVAE(nn.Module):
         # Return everything you need to compute VAE loss
         return logits, z_mean, z_log_var
 
-    def generate(self, x_cond, max_len=None, device='cpu'):
+    def generate(self, x_cond, max_len=None, device='cuda', teacher_force_inputs=None):
         """
         Generate SMILES given a condition (without teacher forcing).
         """
@@ -273,7 +273,7 @@ class ConditionalVAE(nn.Module):
         z = torch.randn(B, self.encoder.hidden_dim).to(device)
 
         # Pass to decoder
-        outputs = self.decoder(z, x_cond, teacher_force_inputs=None)
+        outputs = self.decoder(z, x_cond, teacher_force_inputs=teacher_force_inputs)
         # outputs is (B, max_len, n_chars) with logits
         # You can then take argmax along last dim to get actual tokens
         preds = torch.argmax(outputs, dim=-1)  # shape: (B, max_len)
