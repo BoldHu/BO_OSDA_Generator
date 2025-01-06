@@ -24,7 +24,7 @@ class GPTConfig:
         resid_pdrop (float): Dropout rate for residual connections.
         attn_pdrop (float): Dropout rate for attention weights.
     """
-    def __init__(self, vocab_size, block_size, num_props=24, n_layer=1, n_head=8, n_embd=256,
+    def __init__(self, vocab_size, block_size, num_props=24, n_layer=4, n_head=8, n_embd=256,
                  embd_pdrop=0.1, resid_pdrop=0.1, attn_pdrop=0.1):
         self.vocab_size = vocab_size
         self.block_size = block_size

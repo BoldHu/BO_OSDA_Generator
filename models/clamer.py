@@ -3,6 +3,13 @@ import torch.nn as nn
 from torch.nn import functional as F
 import math
 
+PAD = 0
+UNK = 1
+EOS = 2
+SOS = 3
+MASK = 4
+MAX_LEN = 220
+
 # 注意力机制
 def attention(Q, K, V, mask, d_model):
     # b句话,每句话50个词,每个词编码成32维向量,4个头,每个头分到8维向量
@@ -26,7 +33,7 @@ def attention(Q, K, V, mask, d_model):
 
     # 每个头计算的结果合一
     # [b, 4, 50, 8] -> [b, 50, 32]
-    score = score.permute(0, 2, 1, 3).reshape(-1, 127, d_model)
+    score = score.permute(0, 2, 1, 3).reshape(-1, 221, d_model)
 
     return score
 
@@ -75,9 +82,9 @@ class MultiHead_Attn(torch.nn.Module):
         # 拆分成多个头
         # b句话,每句话50个词,每个词编码成32维向量,4个头,每个头分到8维向量
         # [b, 50, 32] -> [b, 4, 50, 8]
-        Q = Q.reshape(-1, 127, self.head, int(self.d_model / self.head)).permute(0, 2, 1, 3)
-        K = K.reshape(-1, 127, self.head, int(self.d_model / self.head)).permute(0, 2, 1, 3)
-        V = V.reshape(-1, 127, self.head, int(self.d_model / self.head)).permute(0, 2, 1, 3)
+        Q = Q.reshape(-1, 221, self.head, int(self.d_model / self.head)).permute(0, 2, 1, 3)
+        K = K.reshape(-1, 221, self.head, int(self.d_model / self.head)).permute(0, 2, 1, 3)
+        V = V.reshape(-1, 221, self.head, int(self.d_model / self.head)).permute(0, 2, 1, 3)
 
         # 计算注意力
         # [b, 4, 50, 8] -> [b, 50, 32]
@@ -106,8 +113,8 @@ class EmbeddingLayer(torch.nn.Module):
             return math.cos(pe)
 
         # 初始化位置编码矩阵
-        pe = torch.empty(125, d_model)
-        for i in range(125):
+        pe = torch.empty(219, d_model)
+        for i in range(219):
             for j in range(d_model):
                 pe[i, j] = get_pe(i, j, d_model)
         pe = pe.unsqueeze(0)
@@ -170,20 +177,20 @@ class FullyConnectedOutput(torch.nn.Module):
         return out
 
 # 注意力掩码
-def mask_tril(data, char_to_index, device):
+def mask_tril(data, device):
     # b句话,每句话50个词,这里是还没embed的
-    # data = [b, 127]
+    # data = [b, 221]
     # 矩阵表示每个词对其他词是否可见
     # 上三角矩阵,不包括对角线,意味着,对每个词而言,他只能看到他自己,和他之前的词,而看不到之后的词
-    # [1, 127, 127]
-    tril = 1 - torch.tril(torch.ones(1, 127, 127, dtype=torch.long))
+    # [1, 221, 221]
+    tril = 1 - torch.tril(torch.ones(1, 221, 221, dtype=torch.long))
     tril = tril.to(device, non_blocking=True)
     # 判断y当中每个词是不是pad,如果是pad则不可见
     # [b, 50]
     b = data.shape[0]
     seq = torch.tensor([1, 2]).reshape(1, -1).expand(b, 2).to(device, non_blocking=True)
     seq = torch.cat((seq, data), dim=-1)
-    mask = seq == char_to_index['?']
+    mask = seq == PAD
     mask = mask.to(device, non_blocking=True)
     # 变形+转型,为了之后的计算
     # [b, 1, 50]
@@ -247,7 +254,7 @@ class LSTMLayer(nn.Module):
 
 # gpt架构模块
 class GptCovd(torch.nn.Module):
-    def __init__(self, d_model, charlen, device, head, char_to_index):
+    def __init__(self, d_model, charlen, device, head):
         super().__init__()
         self.fc_zeo = torch.nn.Linear(7, d_model)
         self.fc_syn = torch.nn.Linear(17, d_model)
@@ -259,10 +266,9 @@ class GptCovd(torch.nn.Module):
         self.lm = LSTMLayer(d_model=d_model)
         self.device = device
         self.d_model = d_model
-        self.char_to_index = char_to_index
 
     def forward(self, zeo, syn, smis_seq):
-        mask = mask_tril(smis_seq, self.char_to_index, self.device).to(self.device, non_blocking=True)
+        mask = mask_tril(smis_seq, self.device).to(self.device, non_blocking=True)
         zeo = self.fc_zeo(zeo.to(torch.float32)).reshape((-1, 1, self.d_model)).to(self.device, non_blocking=True)
         syn = self.fc_syn(syn.to(torch.float32)).reshape((-1, 1, self.d_model)).to(self.device, non_blocking=True)
         # 编码,添加位置信息

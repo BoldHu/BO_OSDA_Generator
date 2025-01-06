@@ -387,7 +387,6 @@ def mask_tril(data):
     mask = (mask == 1).unsqueeze(dim=1)
     return mask
 
-
 # 解码网络
 class DecoderLayer(torch.nn.Module):
     def __init__(self):

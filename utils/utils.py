@@ -125,6 +125,14 @@ def smiles_to_sequence(smis_list, char_to_index):
         smis_list_sequence.append(smis_seq)
     return smis_list_sequence
 
+def smiles_to_seq(smiles, vocab):
+# convert SMILES to sequence from np.array to list
+    if type(smiles) == np.ndarray:
+        smiles = smiles.tolist()
+        # convert it from [[''], [''], ['']] to ['','','']
+        smiles = [i[0] for i in smiles]
+    return vocab.to_seq(smiles, with_eos=True, with_sos=True)
+
 # convert the sequence to SMILES
 def sequence_to_smiles(seq_list, index_to_char):
     # check if the sequence is a tensor
@@ -169,3 +177,135 @@ def predict(zeo, syn, model, char_to_index):
         target[:, i + 1] = out
 
     return target
+
+# Split SMILES into words
+def split(sm):
+    '''
+    function: Split SMILES into words. Care for Cl, Br, Si, Se, Na etc.
+    input: A SMILES
+    output: A string with space between words
+    '''
+    arr = []
+    i = 0
+    while i < len(sm)-1:
+        if not sm[i] in ['%', 'C', 'B', 'S', 'N', 'R', 'X', 'L', 'A', 'M', \
+                        'T', 'Z', 's', 't', 'H', '+', '-', 'K', 'F']:
+            arr.append(sm[i])
+            i += 1
+        elif sm[i]=='%':
+            arr.append(sm[i:i+3])
+            i += 3
+        elif sm[i]=='C' and sm[i+1]=='l':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='C' and sm[i+1]=='a':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='C' and sm[i+1]=='u':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='B' and sm[i+1]=='r':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='B' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='B' and sm[i+1]=='a':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='B' and sm[i+1]=='i':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='S' and sm[i+1]=='i':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='S' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='S' and sm[i+1]=='r':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='N' and sm[i+1]=='a':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='N' and sm[i+1]=='i':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='R' and sm[i+1]=='b':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='R' and sm[i+1]=='a':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='X' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='L' and sm[i+1]=='i':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='A' and sm[i+1]=='l':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='A' and sm[i+1]=='s':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='A' and sm[i+1]=='g':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='A' and sm[i+1]=='u':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='M' and sm[i+1]=='g':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='M' and sm[i+1]=='n':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='T' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='Z' and sm[i+1]=='n':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='s' and sm[i+1]=='i':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='s' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='t' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='H' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='+' and sm[i+1]=='2':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='+' and sm[i+1]=='3':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='+' and sm[i+1]=='4':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='-' and sm[i+1]=='2':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='-' and sm[i+1]=='3':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='-' and sm[i+1]=='4':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='K' and sm[i+1]=='r':
+            arr.append(sm[i:i+2])
+            i += 2
+        elif sm[i]=='F' and sm[i+1]=='e':
+            arr.append(sm[i:i+2])
+            i += 2
+        else:
+            arr.append(sm[i])
+            i += 1
+    if i == len(sm)-1:
+        arr.append(sm[i])
+    return ' '.join(arr) 
