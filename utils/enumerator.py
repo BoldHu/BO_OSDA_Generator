@@ -167,6 +167,7 @@ class SmilesEnumerator(object):
         must be RDKit sanitizable"""
         m = Chem.MolFromSmiles(smiles)
         if m is None:
+            print("Invalid SMILES:", smiles)
             return None # Invalid SMILES
         ans = list(range(m.GetNumAtoms()))
         np.random.shuffle(ans)
