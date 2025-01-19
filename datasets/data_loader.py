@@ -8,6 +8,7 @@ from rdkit import Chem
 from tqdm import tqdm
 import ast
 import random
+import pandas as pd
 
 PAD = 0
 MAX_LEN = 220
@@ -190,6 +191,59 @@ class Contrastive_Seq2seqDataset(Dataset):
         all_unique_smiles = all_unique_smiles[sample_list]
         # convert to tensor
         sm_negative = torch.tensor(all_unique_smiles, dtype=torch.long)
+        
+        return zeo_item, syn_item, sm, sm_positive, sm_negative
+    
+class Contrastive_Seq2seqDataset_random(Dataset):
+    def __init__(self, dataset, vocab, seq_len=220):
+        self.zeo = dataset['zeo'].values
+        self.syn = dataset['syn'].values
+        self.smiles = dataset['smiles'].values
+        self.positive_smiles = dataset['positive_smiles'].values
+        # read chembl smiles as all_unique_smiles and sample form it as negative samples
+        self.all_unique_smiles = pd.read_csv('./data/chembl_24_remove.csv')['canonical_smiles'].values
+        
+        # convert zeo and syn to tensor
+        self.zeo = [zeo.strip('[]').replace("'", '').split(', ') for zeo in tqdm(self.zeo)]
+        self.zeo = np.array(self.zeo, dtype=np.float32)
+        self.zeo = torch.tensor(self.zeo, dtype=torch.float32)
+        
+        self.syn = [syn.strip('[]').replace("'", '').split(', ') for syn in tqdm(self.syn)]
+        self.syn = np.array(self.syn, dtype=np.float32)
+        self.syn = torch.tensor(self.syn, dtype=torch.float32)
+
+        # convert smiles to sequence and convert to tensor
+        self.smiles = self.smiles.tolist()
+        self.smiles = [smiles_to_seq(smile, vocab, seq_len) for smile in tqdm(self.smiles)]
+        self.smiles = torch.tensor(self.smiles, dtype=torch.long)
+        
+        # convert positive smiles to sequence and convert to tensor
+        # positive smiles is like <class 'numpy.ndarray'>: ["['CCO', 'CCC']", "['CCO', 'CCC']", "['CCO', 'CCC']"]
+        self.positive_smiles = self.positive_smiles.tolist()
+        self.positive_smiles = [ast.literal_eval(smile) for smile in self.positive_smiles]
+        
+        self.vocab = vocab
+        self.seq_len = seq_len
+
+    def __len__(self):
+        return len(self.smiles)
+
+    def __getitem__(self, item):
+        sm = self.smiles[item]
+        zeo_item = self.zeo[item]
+        syn_item = self.syn[item]
+        sm_positive = self.positive_smiles[item]
+        
+        # convert positive smiles to sequence and convert to tensor
+        sm_positive = [smiles_to_seq(smile, self.vocab, self.seq_len) for smile in sm_positive]
+        sm_positive = torch.tensor(sm_positive, dtype=torch.long)
+        
+        # randomly select 64 negative samples
+        negative_sample_index = random.sample(range(len(self.all_unique_smiles)), 64)
+        negative_smiles = self.all_unique_smiles[negative_sample_index]
+        # convert to sequence and convert to tensor
+        sm_negative = [smiles_to_seq(smile, self.vocab, self.seq_len) for smile in negative_smiles]
+        sm_negative = torch.tensor(sm_negative, dtype=torch.long)
         
         return zeo_item, syn_item, sm, sm_positive, sm_negative
     

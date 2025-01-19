@@ -39,22 +39,6 @@ def InfoNCELoss(sm, sm_positive, sm_negative, trfm, temperature=0.07):
     Function: Compute the InfoNCE loss using transformer encoder
     
     Args:
-        sm: Tensor of shape (bathc_size, seq_len) - original SMILES sequences
-        sm_positive: Tensor of shape (batch_size, 10, seq_len) - positive samples for each SMILES, 10 means 10 positive samples
-        sm_negative: Tensor of shape (batch_size, unique_smiles - 1, seq_len) - negative samples for each SMILES, 10 means 10 negative samples, unique_smiles - 1 means all negative samples
-        trfm: Transformer model instance
-        vocab: Vocabulary object
-        temperature: Scaling factor for logits
-        
-    Returns:
-        loss: Tensor scalar
-    '''
-
-def InfoNCELoss(sm, sm_positive, sm_negative, trfm, temperature=0.07):
-    '''
-    Function: Compute the InfoNCE loss using transformer encoder
-    
-    Args:
         sm: Tensor of shape (batch_size, seq_len) - origin SMILES sequences
         sm_positive: Tensor of shape (batch_size, P, seq_len) - each SMILES has P positive samples
         sm_negative: Tensor of shape (batch_size, N, seq_len) - each SMILES has N negative samples

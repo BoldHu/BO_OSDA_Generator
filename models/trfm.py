@@ -34,10 +34,12 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pe', pe)
         
     def forward(self, x):
-        # x = x + Variable(self.pe[:, :x.size(1)], 
-        #                  requires_grad=False)
-        pe_slice = self.pe[:, : x.size(0), :].transpose(0,1)  # (T, 1, H)
-        x = x + Variable(pe_slice, requires_grad=False)
+        # x: (T, B, H)
+        # self.pe: (1, max_len, d_model)
+        # self.pe[:, :T, :]: (1, T, d_model)
+        # permute(1, 0, 2): (T, 1, d_model)
+        pos_enc = self.pe[:, :x.size(0), :].permute(1, 0, 2)  # => (T, 1, H)
+        x = x + pos_enc
         return self.dropout(x)
 
 class TrfmSeq2seq(nn.Module):
@@ -72,6 +74,7 @@ class TrfmSeq2seq(nn.Module):
         if self.trfm.encoder.norm:
             output = self.trfm.encoder.norm(output) # (T,B,H)
         # mean, max, first*2
+        output = output.detach()
         mean = output.mean(dim=0)  # (B, H)
         max_ = output.max(dim=0).values  # (B, H)
         first = output[0, :, :]  # (B, H)
