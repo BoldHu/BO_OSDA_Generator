@@ -278,4 +278,3 @@ class ConditionalVAE(nn.Module):
         # You can then take argmax along last dim to get actual tokens
         preds = torch.argmax(outputs, dim=-1)  # shape: (B, max_len)
         return preds
-

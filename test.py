@@ -86,7 +86,8 @@ negative_smiles = ['Fc1cnc(NC(=O)[C@H](CC2CCOCC2)c3ccc(cc3)S(=O)(=O)C4CC4)s1',
 # draw the negative smiles
 for i in range(len(negative_smiles)):
     negative_mol = Chem.MolFromSmiles(negative_smiles[i])
-    img = Draw.MolToImage(negative_mol)
+    # convert the negative smiles to image with transparent background
+    img = Draw.MolToImage(negative_mol, kekulize=True, wedgeBonds=True, imageType='png', size=(300, 300), transparent=True)
     img.save('figures/negative/{}.png'.format(negative_smiles[i]))
     
 mole = 'CC(C)NC(C)C'

@@ -1,0 +1,6 @@
+CHA_validity_rate_origin: 0.358, CHA_validity_rate_cl: 0.969
+CHA_uniqueness_rate_origin: 0.819, CHA_uniqueness_rate_cl: 0.529
+CHA_novelty_rate_origin: 0.9438339438339438, CHA_novelty_rate_cl: 0.720226843100189
+CHA_reconstructability_rate_origin: 0.05616605616605617, CHA_reconstructability_rate_cl: 0.27977315689981097
+CHA_IntDiv_origin: 0.8891243641726648, CHA_IntDiv_cl: 0.8936066782485486
+CHA_FCD_score_origin: 4.23145289635346, CHA_FCD_score_cl: 0.39907973016443776
