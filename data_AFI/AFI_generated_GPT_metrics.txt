@@ -1,6 +1,0 @@
-AFI_validity_rate_origin: 0.998, AFI_validity_rate_cl: 0.964
-AFI_uniqueness_rate_origin: 0.33, AFI_uniqueness_rate_cl: 0.459
-AFI_novelty_rate_origin: 0.7333333333333333, AFI_novelty_rate_cl: 0.7995642701525054
-AFI_reconstructability_rate_origin: 0.26666666666666666, AFI_reconstructability_rate_cl: 0.20043572984749455
-AFI_IntDiv_origin: 0.7774910774229551, AFI_IntDiv_cl: 0.8337992111897545
-AFI_FCD_score_origin: 3.9085507782014908, AFI_FCD_score_cl: 1.0821486295469178

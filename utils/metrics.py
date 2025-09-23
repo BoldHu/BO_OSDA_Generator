@@ -54,7 +54,7 @@ def FCD_score(real_data, generated_data):
             generated_data_valid.append(Chem.MolToSmiles(mol, canonical=True))
     
     # calculate the FCD score
-    fcd_score = fcd.get_fcd(real_data, generated_data, fcd_chemnet)
+    fcd_score = fcd.get_fcd(real_data_valid, generated_data_valid, model=fcd_chemnet)
     return fcd_score
 
 # calculate the IntDiv (Internal diversity): measuring whether the model continuously generates structurally similar molecules

@@ -1,33 +1,41 @@
-# Project Name
+# Contras-STE: Contrastive Learning-based SMILES Transformer Encoder for Molecrlar Representation
 
-## Description
+**Paper Title:**
+**Enhancing Conditional Molecular Generation with Pretrained SMILES Transformer and Contrastive Representation Learning**
 
-This project is a [brief description of the project]. It aims to [explain the purpose and goals of the project].
+line exhibit average F1-score improvements of 3.12, 0.64, and 1.53 across different tasks, demonstrating its substantial potential for NLP tasks within the zeolite research community.
+
+## Pipeline Architecture
+
+![Pipeline Overview](./figures/pipeline.png)
 
 ## Installation
 
-To install and run this project, follow these steps:
+### Requirements
 
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
+* PyTorch (≥1.5.0)
+* Transformers (tested on v3.0.2)
+* tqdm (≥4.36.0)
+* numpy (≥1.18.0)
+* seqeval
+* rdkit
 
-## Usage
+Install dependencies via:
 
-To use this project, follow these instructions:
+```bash
+pip install torch transformers tqdm numpy seqeval rdkit
+```
 
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
+## Data and Pre-trained Models
 
-## Contributing
+### Datasets
 
-Contributions are welcome! If you would like to contribute to this project, please follow these guidelines:
+Available on Kaggle:
 
-1. [Guideline 1]
-2. [Guideline 2]
-3. [Guideline 3]
+* [Original Dataset for ZeolBERT](https://www.kaggle.com/datasets/boldhu/original-dataset-for-zeolbert)
 
-## License
+### Pre-trained Models
 
-This project is licensed under the [license name]. For more information, please see the [LICENSE](LICENSE) file.
+Download and place the models in `./pretrained_model/bert-base-cased`:
+
+* [Pre-trained Model and Fine-tuned Models](https://www.kaggle.com/datasets/boldhu/original-dataset-for-zeolbert)

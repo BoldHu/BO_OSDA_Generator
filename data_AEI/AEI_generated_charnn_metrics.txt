@@ -1,6 +1,0 @@
-AEI_validity_rate_origin: 0.272, AEI_validity_rate_cl: 0.944
-AEI_uniqueness_rate_origin: 0.936, AEI_uniqueness_rate_cl: 0.519
-AEI_novelty_rate_origin: 0.9978632478632479, AEI_novelty_rate_cl: 0.8978805394990366
-AEI_reconstructability_rate_origin: 0.002136752136752137, AEI_reconstructability_rate_cl: 0.10211946050096339
-AEI_IntDiv_origin: 0.8328920949606096, AEI_IntDiv_cl: 0.8151251602826046
-AEI_FCD_score_origin: 5.770402010250862, AEI_FCD_score_cl: 1.2114492080787613
