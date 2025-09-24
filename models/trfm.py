@@ -81,6 +81,83 @@ class TrfmSeq2seq(nn.Module):
         penul_first = penul[0, :, :]  # (B, H)
         return torch.cat([mean, max_, first, penul_first], dim=1)  # (B, 4H)
     
+    def _encode_mean(self, src):
+        # src: (T,B)
+        embedded = self.embed(src)  # (T,B,H)
+        embedded = self.pe(embedded) # (T,B,H)
+        output = embedded
+        for i in range(self.trfm.encoder.num_layers - 1):
+            output = self.trfm.encoder.layers[i](output, src_mask=None)  # (T,B,H)
+        penul = output.detach()  # (T,B,H), 保留为张量
+        output = self.trfm.encoder.layers[-1](output, src_mask=None)  # (T,B,H)
+        if self.trfm.encoder.norm:
+            output = self.trfm.encoder.norm(output) # (T,B,H)
+        # mean, max, first*2
+        output = output.detach()
+        mean = output.mean(dim=0)  # (B, H)
+        max_ = output.max(dim=0).values  # (B, H)
+        first = output[0, :, :]  # (B, H)
+        penul_first = penul[0, :, :]  # (B, H)
+        return torch.cat([mean], dim=1)  # (B, 4H)
+    
+    def _encode_max(self, src):
+        # src: (T,B)
+        embedded = self.embed(src)  # (T,B,H)
+        embedded = self.pe(embedded) # (T,B,H)
+        output = embedded
+        for i in range(self.trfm.encoder.num_layers - 1):
+            output = self.trfm.encoder.layers[i](output, src_mask=None)  # (T,B,H)
+        penul = output.detach()  # (T,B,H), 保留为张量
+        output = self.trfm.encoder.layers[-1](output, src_mask=None)  # (T,B,H)
+        if self.trfm.encoder.norm:
+            output = self.trfm.encoder.norm(output) # (T,B,H)
+        # mean, max, first*2
+        output = output.detach()
+        mean = output.mean(dim=0)  # (B, H)
+        max_ = output.max(dim=0).values  # (B, H)
+        first = output[0, :, :]  # (B, H)
+        penul_first = penul[0, :, :]  # (B, H)
+        return torch.cat([max_], dim=1)  # (B, 4H)
+    
+    def _encode_first(self, src):
+        # src: (T,B)
+        embedded = self.embed(src)  # (T,B,H)
+        embedded = self.pe(embedded) # (T,B,H)
+        output = embedded
+        for i in range(self.trfm.encoder.num_layers - 1):
+            output = self.trfm.encoder.layers[i](output, src_mask=None)  # (T,B,H)
+        penul = output.detach()  # (T,B,H), 保留为张量
+        output = self.trfm.encoder.layers[-1](output, src_mask=None)  # (T,B,H)
+        if self.trfm.encoder.norm:
+            output = self.trfm.encoder.norm(output) # (T,B,H)
+        # mean, max, first*2
+        output = output.detach()
+        mean = output.mean(dim=0)  # (B, H)
+        max_ = output.max(dim=0).values  # (B, H)
+        first = output[0, :, :]  # (B, H)
+        penul_first = penul[0, :, :]  # (B, H)
+        return torch.cat([first], dim=1)  # (B, 4H)
+    
+    def _encode_penul_first(self, src):
+        # src: (T,B)
+        embedded = self.embed(src)  # (T,B,H)
+        embedded = self.pe(embedded) # (T,B,H)
+        output = embedded
+        for i in range(self.trfm.encoder.num_layers - 1):
+            output = self.trfm.encoder.layers[i](output, src_mask=None)  # (T,B,H)
+        penul = output.detach()  # (T,B,H), 保留为张量
+        output = self.trfm.encoder.layers[-1](output, src_mask=None)  # (T,B,H)
+        if self.trfm.encoder.norm:
+            output = self.trfm.encoder.norm(output) # (T,B,H)
+        # mean, max, first*2
+        output = output.detach()
+        mean = output.mean(dim=0)  # (B, H)
+        max_ = output.max(dim=0).values  # (B, H)
+        first = output[0, :, :]  # (B, H)
+        penul_first = penul[0, :, :]  # (B, H)
+        return torch.cat([penul_first], dim=1)  # (B, 4H)
+        
+    
     
     def encode(self, src):
         # src: (T,B)
